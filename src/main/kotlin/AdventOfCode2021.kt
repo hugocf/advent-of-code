@@ -33,9 +33,9 @@ object Puzzle02 {
 
     fun moveSubmarineByAim(start: Position, commands: List<String>): Position {
         fun Position.move(cmd: Pair<String, Int>) = when(cmd.first) {
-            "forward" -> Position(this.horizontal + cmd.second, this.depth + this.aim * cmd.second, this.aim)
-            "up" -> Position(this.horizontal, this.depth, this.aim - cmd.second)
-            "down" -> Position(this.horizontal, this.depth, this.aim + cmd.second)
+            "forward" -> this.copy(horizontal = this.horizontal + cmd.second, depth = this.depth + this.aim * cmd.second)
+            "up" -> this.copy(aim = this.aim - cmd.second)
+            "down" -> this.copy(aim = this.aim + cmd.second)
             else -> this
         }
 
