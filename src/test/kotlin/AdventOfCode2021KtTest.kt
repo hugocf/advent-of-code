@@ -1,6 +1,7 @@
 import Puzzle01.countIncreasingDepths
 import Puzzle01.countIncreasingDepthsBy
 import Puzzle02.moveSubmarine
+import Puzzle02.moveSubmarine2
 import Puzzle02.moveSubmarineByAim
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
@@ -44,15 +45,19 @@ internal class AdventOfCode2021KtTest {
         @Test
         fun `move submarine example`() {
             val result = moveSubmarine(Position.start, exampleCommands)
-
             assertEquals(150, result.horizontal * result.depth)
+
+            val result2 = moveSubmarine2(Position.start, exampleCommands)
+            assertEquals(150, result2.horizontal * result2.depth)
         }
 
         @Test
         fun `move submarine answer`() {
             val result = moveSubmarine(Position.start,  answerCommands)
-
             assertEquals(1746616, result.horizontal * result.depth)
+
+            val result2 = moveSubmarine2(Position.start,  answerCommands)
+            assertEquals(1746616, result2.horizontal * result2.depth)
         }
 
         @Nested

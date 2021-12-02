@@ -31,6 +31,19 @@ object Puzzle02 {
         )
     }
 
+    fun moveSubmarine2(start: Position, commands: List<String>): Position {
+        fun Position.move(cmd: Pair<String, Int>) = when(cmd.first) {
+            "forward" -> this.copy(horizontal = this.horizontal + cmd.second)
+            "up" -> this.copy(depth = this.depth - cmd.second)
+            "down" -> this.copy(depth = this.depth + cmd.second)
+            else -> this
+        }
+
+        return commands
+            .map { Pair(it.split(commandDelimiter).first(), it.split(commandDelimiter).last().toInt()) }
+            .fold(start) { acc, cmd -> acc.move(cmd) }
+    }
+
     fun moveSubmarineByAim(start: Position, commands: List<String>): Position {
         fun Position.move(cmd: Pair<String, Int>) = when(cmd.first) {
             "forward" -> this.copy(horizontal = this.horizontal + cmd.second, depth = this.depth + this.aim * cmd.second)
