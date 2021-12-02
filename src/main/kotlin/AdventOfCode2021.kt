@@ -31,11 +31,11 @@ object Puzzle02 {
         )
     }
 
-    fun moveSubmarine2(start: Position, commands: List<String>): Position {
+    fun moveSubmarineByAim(start: Position, commands: List<String>): Position {
         fun Position.move(cmd: Pair<String, Int>) = when(cmd.first) {
-            "forward" -> this.copy(horizontal = this.horizontal + cmd.second)
-            "up" -> this.copy(depth = this.depth - cmd.second)
-            "down" -> this.copy(depth = this.depth + cmd.second)
+            "forward" -> this.copy(horizontal = this.horizontal + cmd.second, depth = this.depth + this.aim * cmd.second)
+            "up" -> this.copy(aim = this.aim - cmd.second)
+            "down" -> this.copy(aim = this.aim + cmd.second)
             else -> this
         }
 
@@ -44,11 +44,11 @@ object Puzzle02 {
             .fold(start) { acc, cmd -> acc.move(cmd) }
     }
 
-    fun moveSubmarineByAim(start: Position, commands: List<String>): Position {
+    fun moveSubmarine2(start: Position, commands: List<String>): Position {
         fun Position.move(cmd: Pair<String, Int>) = when(cmd.first) {
-            "forward" -> this.copy(horizontal = this.horizontal + cmd.second, depth = this.depth + this.aim * cmd.second)
-            "up" -> this.copy(aim = this.aim - cmd.second)
-            "down" -> this.copy(aim = this.aim + cmd.second)
+            "forward" -> this.copy(horizontal = this.horizontal + cmd.second)
+            "up" -> this.copy(depth = this.depth - cmd.second)
+            "down" -> this.copy(depth = this.depth + cmd.second)
             else -> this
         }
 
