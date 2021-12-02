@@ -1,6 +1,7 @@
 import Puzzle01.countIncreasingDepths
 import Puzzle01.countIncreasingDepthsBy
 import Puzzle02.moveSubmarine
+import Puzzle02.moveSubmarineByAim
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Nested
@@ -11,7 +12,8 @@ internal class AdventOfCode2021KtTest {
 
     @Nested
     inner class Puzzle01 {
-        val exampleDepths = listOf(199, 200, 208, 210, 200, 207, 240, 269, 260, 263)
+        private val exampleDepths = listOf(199, 200, 208, 210, 200, 207, 240, 269, 260, 263)
+        private val answerDepths = Context.readLinesFromResource("puzzle01.input.txt").map { it.toInt() }
 
         @Test
         fun `count increasing depths example`() {
@@ -20,8 +22,7 @@ internal class AdventOfCode2021KtTest {
 
         @Test
         fun `count increasing depths answer`() {
-            val depths = Context.readLinesFromResource("puzzle01.input.txt").map { it.toInt() }
-            assertEquals(1624, countIncreasingDepths(depths))
+            assertEquals(1624, countIncreasingDepths(answerDepths))
         }
 
         @Test
@@ -31,40 +32,59 @@ internal class AdventOfCode2021KtTest {
 
         @Test
         fun `count window depths answer`() {
-            val depths = Context.readLinesFromResource("puzzle01.input.txt").map { it.toInt() }
-            assertEquals(1653, countIncreasingDepthsBy(3, depths))
+            assertEquals(1653, countIncreasingDepthsBy(3, answerDepths))
         }
     }
 
     @Nested
     inner class Puzzle02 {
-        val exampleCommands = listOf("forward 5", "down 5", "forward 8", "up 3", "down 8", "forward 2")
+        private val exampleCommands = listOf("forward 5", "down 5", "forward 8", "up 3", "down 8", "forward 2")
+        private val answerCommands = Context.readLinesFromResource("puzzle02.input.txt")
 
         @Test
         fun `move submarine example`() {
-            val result = moveSubmarine(start= Position(0, 0), exampleCommands)
+            val result = moveSubmarine(Position.start, exampleCommands)
 
             assertEquals(150, result.horizontal * result.depth)
         }
 
         @Test
         fun `move submarine answer`() {
-            val commands = Context.readLinesFromResource("puzzle02.input.txt")
-
-            val result = moveSubmarine(start= Position(0, 0),  commands)
+            val result = moveSubmarine(Position.start,  answerCommands)
 
             assertEquals(1746616, result.horizontal * result.depth)
         }
 
-        @Test
-        fun `count window depths example`() {
-            // assertEquals(5, countIncreasingDepthsBy(3, exampleCommands))
-        }
+        @Nested
+        inner class MoveSubmarineByAim {
+            @Test
+            fun `down increases aim by X`() {
+                assertEquals(Position(0, 0, 5), moveSubmarineByAim(Position.start, listOf("down 5")))
+            }
 
-        @Test
-        fun `count window depths answer`() {
-            //val depths = Context.readLinesFromResource("puzzle01.input.txt").map { it.toInt() }
-            //assertEquals(1653, countIncreasingDepthsBy(3, depths))
+            @Test
+            fun `up decreases aim by X`() {
+                assertEquals(Position(0, 0, -5), moveSubmarineByAim(Position.start, listOf("up 5")))
+            }
+
+            @Test
+            fun `forward increases horizontal by X and depth by aim times X`() {
+                assertEquals(Position(5, 15, 3), moveSubmarineByAim(Position(0, 0, 3), listOf("forward 5")))
+            }
+
+            @Test
+            fun `the example`() {
+                val result = moveSubmarineByAim(Position.start, exampleCommands)
+
+                assertEquals(900, result.horizontal * result.depth)
+            }
+
+            @Test
+            fun `the answer`() {
+                val result = moveSubmarineByAim(Position.start, answerCommands)
+
+                assertEquals(1741971043, result.horizontal * result.depth)
+            }
         }
     }
 

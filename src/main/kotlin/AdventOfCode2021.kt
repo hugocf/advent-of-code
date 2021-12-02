@@ -6,13 +6,18 @@ object Puzzle01 {
         countIncreasingDepths(depths.windowed(size) { it.sum() })
 }
 
-data class Position(val horizontal: Int, val depth: Int)
+data class Position(val horizontal: Int, val depth: Int, val aim: Int = 0) {
+    companion object {
+        val start = Position(0, 0, 0)
+    }
+}
 
 object Puzzle02 {
+    private const val commandDelimiter = " "
+
     fun moveSubmarine(start: Position, commands: List<String>): Position {
-        val delimiter = " "
         val grouped = commands
-            .map { Pair(it.split(delimiter).first(), it.split(delimiter).last()) }
+            .map { Pair(it.split(commandDelimiter).first(), it.split(commandDelimiter).last()) }
             .groupBy { it.first }
             .mapValues { entry -> entry.value.map { it.second.toInt() } }
 
@@ -24,5 +29,18 @@ object Puzzle02 {
             start.horizontal + moveForward,
             start.depth + moveDown - moveUp,
         )
+    }
+
+    fun moveSubmarineByAim(start: Position, commands: List<String>): Position {
+        fun Position.move(cmd: Pair<String, Int>) = when(cmd.first) {
+            "forward" -> Position(this.horizontal + cmd.second, this.depth + this.aim * cmd.second, this.aim)
+            "up" -> Position(this.horizontal, this.depth, this.aim - cmd.second)
+            "down" -> Position(this.horizontal, this.depth, this.aim + cmd.second)
+            else -> this
+        }
+
+        return commands
+            .map { Pair(it.split(commandDelimiter).first(), it.split(commandDelimiter).last().toInt()) }
+            .fold(start) { acc, cmd -> acc.move(cmd) }
     }
 }
