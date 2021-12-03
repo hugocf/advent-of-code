@@ -65,26 +65,29 @@ data class Diagnostics(val gammaRate: Int, val epsionRate: Int)
 
 object Puzzle3 {
     fun calculateDiagnostics(report: List<String>): Diagnostics {
-        fun Map<String, List<String>>.freq(key: String) = this[key]?.size ?: 0
+        fun String.splitPerCharacter() = this.toList().map { it.toString() }
+        fun <K, V> Map<K, List<V>>.mostCommonKey() = this.maxByOrNull { it.value.size }?.key!!
+        fun <K, V> Map<K, List<V>>.leastCommonKey() = this.minByOrNull { it.value.size }?.key!!
+        operator fun Pair<String, String>.plus(other: Pair<String, String>) = Pair(this.first + other.first, this.second + other.second)
 
-        val explodeDigits = report.map { it.split("").filterNot { it.isEmpty() } }
-
-        val common = transpose(explodeDigits)
-            .map { it.groupBy { it } }
-            .map { if (it.freq("0") > it.freq("1")) Pair("0", "1") else Pair("1", "0") }
-            .reduce { acc, elem -> Pair(acc.first + elem.first, acc.second + elem.second) }
+        val common = report
+            .map { it.splitPerCharacter() }
+            .transpose()
+            .map { digits -> digits.groupBy { it } }
+            .map { Pair(it.mostCommonKey(), it.leastCommonKey()) }
+            .reduce { acc, pair -> acc + pair }
 
         return Diagnostics(common.first.toInt(2), common.second.toInt(2))
     }
 
-    fun transpose(matrix: List<List<String>>): List<List<String>> {
-        val rows = matrix.size
-        val cols = matrix.first().size
+    fun List<List<String>>.transpose(): List<List<String>> {
+        val rows = this.size
+        val cols = this.first().size
         val transposed = MutableList(cols) { MutableList(rows) { "" } }
 
         transposed.forEachIndexed { row, line ->
             line.forEachIndexed { col, _ ->
-                transposed[row][col] = matrix[col][row]
+                transposed[row][col] = this[col][row]
             }
         }
 

@@ -112,7 +112,7 @@ internal class AdventOfCode2021KtTest {
                 listOf("3", "6"),
             )
 
-            assertEquals(expected, transpose(matrix))
+            assertEquals(expected, matrix.transpose())
         }
 
         @Test
