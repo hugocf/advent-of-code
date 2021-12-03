@@ -3,6 +3,8 @@ import Puzzle01.countIncreasingDepthsBy
 import Puzzle02.moveSubmarine
 import Puzzle02.moveSubmarine2
 import Puzzle02.moveSubmarineByAim
+import Puzzle3.calculateDiagnostics
+import Puzzle3.transpose
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Nested
@@ -90,6 +92,45 @@ internal class AdventOfCode2021KtTest {
 
                 assertEquals(1741971043, result.horizontal * result.depth)
             }
+        }
+    }
+
+    @Nested
+    inner class Puzzle03 {
+        private val exampleReport = listOf("00100", "11110", "10110", "10111", "10101", "01111", "00111", "11100", "10000", "11001", "00010", "01010")
+        private val answerReport = Context.readLinesFromResource("puzzle03.input.txt")
+
+        @Test
+        fun `transpose a matrix`() {
+            val matrix = listOf(
+                listOf("1", "2", "3"),
+                listOf("4", "5", "6"),
+            )
+            val expected = listOf(
+                listOf("1", "4"),
+                listOf("2", "5"),
+                listOf("3", "6"),
+            )
+
+            assertEquals(expected, transpose(matrix))
+        }
+
+        @Test
+        fun `calculate diagnostics rates`() {
+            val report = listOf("00111", "11100", "00000")
+            assertEquals(Diagnostics("00100".toInt(2), "11011".toInt(2)), calculateDiagnostics(report))
+       }
+
+        @Test
+        fun `calculate diagnostics example`() {
+            val result = calculateDiagnostics(exampleReport)
+            assertEquals(198, result.gammaRate * result.epsionRate)
+        }
+
+        @Test
+        fun `calculate diagnostics answer`() {
+            val result = calculateDiagnostics(answerReport)
+            assertEquals(2583164, result.gammaRate * result.epsionRate)
         }
     }
 
