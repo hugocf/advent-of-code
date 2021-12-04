@@ -2,7 +2,6 @@ package aoc2021
 
 import TestHelpers.readLinesFromResource
 import aoc2021.Puzzle03.LifeSupport
-import aoc2021.Puzzle03.Matrix.transpose
 import aoc2021.Puzzle03.PowerConsumption
 import aoc2021.Puzzle03.calculateLifeSupport
 import aoc2021.Puzzle03.calculatePowerConsumption
@@ -15,21 +14,6 @@ internal class Puzzle03Tests {
         "00100", "11110", "10110", "10111", "10101", "01111", "00111", "11100", "10000", "11001", "00010", "01010"
     )
     private val answerReport = readLinesFromResource("2021/puzzle03.txt")
-
-    @Test
-    fun `transpose a matrix`() {
-        val matrix = listOf(
-            listOf("1", "2", "3"),
-            listOf("4", "5", "6"),
-        )
-        val expected = listOf(
-            listOf("1", "4"),
-            listOf("2", "5"),
-            listOf("3", "6"),
-        )
-
-        assertEquals(expected, matrix.transpose())
-    }
 
     @Nested
     inner class CalculatePowerConsumption {

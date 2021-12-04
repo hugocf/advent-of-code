@@ -1,27 +1,11 @@
 package aoc2021
 
-import aoc2021.Puzzle03.Matrix.transpose
+import aoc2021.Matrix.transpose
 
 object Puzzle03 {
     data class PowerConsumption(val gammaRate: Int, val epsionRate: Int)
 
     data class LifeSupport(val oxygenGeneratorRating: Int, val co2ScrubberRating: Int)
-
-    object Matrix {
-        fun List<List<String>>.transpose(): List<List<String>> {
-            val rows = this.size
-            val cols = this.first().size
-            val transposed = MutableList(cols) { MutableList(rows) { "" } }
-
-            transposed.forEachIndexed { row, line ->
-                line.forEachIndexed { col, _ ->
-                    transposed[row][col] = this[col][row]
-                }
-            }
-
-            return transposed
-        }
-    }
 
     fun calculatePowerConsumption(report: List<String>): PowerConsumption {
         operator fun Pair<String, String>.plus(other: Pair<String, String>) =
@@ -60,7 +44,7 @@ object Puzzle03 {
 
     private fun List<String>.groupByDigits() = this
         .map { it.splitPerCharacter() }
-        .transpose()
+        .transpose("")
         .map { digits -> digits.groupBy { it } }
         .map { Pair(it.mostCommonKey(), it.leastCommonKey()) }
 
