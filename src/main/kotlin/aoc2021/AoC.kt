@@ -1,4 +1,6 @@
-import Matrix.transpose
+package aoc2021
+
+import aoc2021.Matrix.transpose
 
 object Puzzle01 {
     fun countIncreasingDepths(depths: List<Int>): Int =

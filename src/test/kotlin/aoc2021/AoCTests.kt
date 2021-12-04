@@ -1,23 +1,25 @@
-import Matrix.transpose
-import Puzzle01.countIncreasingDepths
-import Puzzle01.countIncreasingDepthsBy
-import Puzzle02.moveSubmarine
-import Puzzle02.moveSubmarine2
-import Puzzle02.moveSubmarineByAim
-import Puzzle3.calculateLifeSupport
-import Puzzle3.calculatePowerConsumption
+package aoc2021
+
+import aoc2021.Matrix.transpose
+import aoc2021.Puzzle01.countIncreasingDepths
+import aoc2021.Puzzle01.countIncreasingDepthsBy
+import aoc2021.Puzzle02.moveSubmarine
+import aoc2021.Puzzle02.moveSubmarine2
+import aoc2021.Puzzle02.moveSubmarineByAim
+import aoc2021.Puzzle3.calculateLifeSupport
+import aoc2021.Puzzle3.calculatePowerConsumption
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.io.File
 
-internal class AdventOfCode2021KtTest {
+internal class AoCTests {
 
     @Nested
     inner class Puzzle01 {
         private val exampleDepths = listOf(199, 200, 208, 210, 200, 207, 240, 269, 260, 263)
-        private val answerDepths = Context.readLinesFromResource("puzzle01.input.txt").map { it.toInt() }
+        private val answerDepths = Context.readLinesFromResource("puzzle01.txt").map { it.toInt() }
 
         @Test
         fun `count increasing depths example`() {
@@ -43,7 +45,7 @@ internal class AdventOfCode2021KtTest {
     @Nested
     inner class Puzzle02 {
         private val exampleCommands = listOf("forward 5", "down 5", "forward 8", "up 3", "down 8", "forward 2")
-        private val answerCommands = Context.readLinesFromResource("puzzle02.input.txt")
+        private val answerCommands = Context.readLinesFromResource("puzzle02.txt")
 
         @Test
         fun `move submarine example`() {
@@ -101,7 +103,7 @@ internal class AdventOfCode2021KtTest {
         private val exampleReport = listOf(
             "00100", "11110", "10110", "10111", "10101", "01111", "00111", "11100", "10000", "11001", "00010", "01010"
         )
-        private val answerReport = Context.readLinesFromResource("puzzle03.input.txt")
+        private val answerReport = Context.readLinesFromResource("puzzle03.txt")
 
         @Test
         fun `transpose a matrix`() {
@@ -119,7 +121,7 @@ internal class AdventOfCode2021KtTest {
         }
 
         @Nested
-        inner class PowerConsumption {
+        inner class CalculatePowerConsumption {
             @Test
             fun `calculate rates`() {
                 val report = listOf("00111", "11100", "00000")
@@ -140,7 +142,7 @@ internal class AdventOfCode2021KtTest {
         }
 
         @Nested
-        inner class LifeSupport {
+        inner class CalculateLifeSupport {
             @Test
             fun `calculate life support rates with different frequencies`() {
                 val report = listOf("00111", "11100", "00000")
@@ -169,7 +171,7 @@ internal class AdventOfCode2021KtTest {
 
     private object Context {
         fun readLinesFromResource(fileName: String): List<String> {
-            val uri = this.javaClass.getResource(fileName)?.toURI() ?: fail("Cannot find resource: $fileName")
+            val uri = this.javaClass.getResource("../2021/$fileName")?.toURI() ?: fail("Cannot find resource: $fileName")
             return File(uri).readLines()
         }
     }
