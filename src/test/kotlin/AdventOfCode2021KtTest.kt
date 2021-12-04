@@ -3,7 +3,8 @@ import Puzzle01.countIncreasingDepthsBy
 import Puzzle02.moveSubmarine
 import Puzzle02.moveSubmarine2
 import Puzzle02.moveSubmarineByAim
-import Puzzle3.calculateDiagnostics
+import Puzzle3.calculateLifeSupport
+import Puzzle3.calculatePowerConsumption
 import Puzzle3.transpose
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
@@ -55,10 +56,10 @@ internal class AdventOfCode2021KtTest {
 
         @Test
         fun `move submarine answer`() {
-            val result = moveSubmarine(Position.start,  answerCommands)
+            val result = moveSubmarine(Position.start, answerCommands)
             assertEquals(1746616, result.horizontal * result.depth)
 
-            val result2 = moveSubmarine2(Position.start,  answerCommands)
+            val result2 = moveSubmarine2(Position.start, answerCommands)
             assertEquals(1746616, result2.horizontal * result2.depth)
         }
 
@@ -80,14 +81,14 @@ internal class AdventOfCode2021KtTest {
             }
 
             @Test
-            fun `the example`() {
+            fun `move example`() {
                 val result = moveSubmarineByAim(Position.start, exampleCommands)
 
                 assertEquals(900, result.horizontal * result.depth)
             }
 
             @Test
-            fun `the answer`() {
+            fun `move answer`() {
                 val result = moveSubmarineByAim(Position.start, answerCommands)
 
                 assertEquals(1741971043, result.horizontal * result.depth)
@@ -97,7 +98,9 @@ internal class AdventOfCode2021KtTest {
 
     @Nested
     inner class Puzzle03 {
-        private val exampleReport = listOf("00100", "11110", "10110", "10111", "10101", "01111", "00111", "11100", "10000", "11001", "00010", "01010")
+        private val exampleReport = listOf(
+            "00100", "11110", "10110", "10111", "10101", "01111", "00111", "11100", "10000", "11001", "00010", "01010"
+        )
         private val answerReport = Context.readLinesFromResource("puzzle03.input.txt")
 
         @Test
@@ -115,22 +118,52 @@ internal class AdventOfCode2021KtTest {
             assertEquals(expected, matrix.transpose())
         }
 
-        @Test
-        fun `calculate diagnostics rates`() {
-            val report = listOf("00111", "11100", "00000")
-            assertEquals(Diagnostics("00100".toInt(2), "11011".toInt(2)), calculateDiagnostics(report))
-       }
+        @Nested
+        inner class PowerConsumption {
+            @Test
+            fun `calculate rates`() {
+                val report = listOf("00111", "11100", "00000")
+                assertEquals(PowerConsumption("00100".toInt(2), "11011".toInt(2)), calculatePowerConsumption(report))
+            }
 
-        @Test
-        fun `calculate diagnostics example`() {
-            val result = calculateDiagnostics(exampleReport)
-            assertEquals(198, result.gammaRate * result.epsionRate)
+            @Test
+            fun `calculate example`() {
+                val result = calculatePowerConsumption(exampleReport)
+                assertEquals(198, result.gammaRate * result.epsionRate)
+            }
+
+            @Test
+            fun `calculate answer`() {
+                val result = calculatePowerConsumption(answerReport)
+                assertEquals(2583164, result.gammaRate * result.epsionRate)
+            }
         }
 
-        @Test
-        fun `calculate diagnostics answer`() {
-            val result = calculateDiagnostics(answerReport)
-            assertEquals(2583164, result.gammaRate * result.epsionRate)
+        @Nested
+        inner class LifeSupport {
+            @Test
+            fun `calculate life support rates with different frequencies`() {
+                val report = listOf("00111", "11100", "00000")
+                assertEquals(LifeSupport("00111".toInt(2), "11100".toInt(2)), calculateLifeSupport(report))
+            }
+
+            @Test
+            fun `calculate life support rates with the same frequency`() {
+                val report = listOf("01000", "01111")
+                assertEquals(LifeSupport("01111".toInt(2), "01000".toInt(2)), calculateLifeSupport(report))
+            }
+
+            @Test
+            fun `calculate life support example`() {
+                val result = calculateLifeSupport(exampleReport)
+                assertEquals(230, result.oxygenGeneratorRating * result.co2ScrubberRating)
+            }
+
+            @Test
+            fun `calculate life support answer`() {
+                val result = calculateLifeSupport(answerReport)
+                assertEquals(2784375, result.oxygenGeneratorRating * result.co2ScrubberRating)
+            }
         }
     }
 
