@@ -1,3 +1,4 @@
+import Matrix.transpose
 import Puzzle01.countIncreasingDepths
 import Puzzle01.countIncreasingDepthsBy
 import Puzzle02.moveSubmarine
@@ -5,7 +6,6 @@ import Puzzle02.moveSubmarine2
 import Puzzle02.moveSubmarineByAim
 import Puzzle3.calculateLifeSupport
 import Puzzle3.calculatePowerConsumption
-import Puzzle3.transpose
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Nested
