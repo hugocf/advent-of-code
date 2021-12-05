@@ -49,33 +49,24 @@ object Puzzle04 {
         }
     }
 
-    fun playGameToWin(input: List<String>): Int {
+    fun playGameToWin(input: List<String>) =
+        playGame(input, shouldStop = Game::hasOneWinner, resultBoard = Game::winnerBoard)
+
+    fun playGameToLoose(input: List<String>) =
+        playGame(input, shouldStop = Game::hasAllWinners, resultBoard = Game::looserBoard)
+
+    private fun playGame(input: List<String>, shouldStop: (Game) -> Boolean, resultBoard: (Game) -> Board?): Int {
         val (numbers, startGame) = Game.load(input)
         var lastNumber: Int? = null
 
-        val stopGame = numbers.fold(startGame) { acc, num ->
-            if (acc.hasOneWinner) acc
+        val stoppedGame = numbers.fold(startGame) { acc, num ->
+            if (shouldStop(acc)) acc
             else {
                 lastNumber = num
                 acc.mark(num)
             }
         }
 
-        return (stopGame.winnerBoard?.allUnmarked?.sum() ?: 1) * (lastNumber ?: 1)
-    }
-
-    fun playGameToLoose(input: List<String>): Int {
-        val (numbers, startGame) = Game.load(input)
-        var lastNumber: Int? = null
-
-        val stopGame = numbers.fold(startGame) { acc, num ->
-            if (acc.hasAllWinners) acc
-            else {
-                lastNumber = num
-                acc.mark(num)
-            }
-        }
-
-        return (stopGame.looserBoard?.allUnmarked?.sum() ?: 1) * (lastNumber ?: 1)
+        return (resultBoard(stoppedGame)?.allUnmarked?.sum() ?: 1) * (lastNumber ?: 1)
     }
 }
