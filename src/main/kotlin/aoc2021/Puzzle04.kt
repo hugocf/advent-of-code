@@ -1,17 +1,22 @@
 package aoc2021
 
 import aoc2021.Matrix.transpose
+import java.time.Instant
 
 object Puzzle04 {
-    data class Board(val grid: List<List<Int?>>) {
+    data class Board(val grid: List<List<Int?>>, val won: Instant? = null) {
         val allUnmarked: List<Int> get() = grid.flatMap { row -> row.filterNotNull() }
 
-        fun mark(num: Int) = this.copy(grid = grid.map { row -> row.map { cell -> if (cell == num) null else cell } })
+        fun mark(num: Int): Board {
+            fun List<Int?>.allAreMarked() = this.filterNotNull().isEmpty()
+            fun Board.hasFullRow() = this.grid.any { row -> row.allAreMarked() }
+            fun Board.hasFullCol() = this.grid.transpose(-1).any { col -> col.allAreMarked() }
 
-        fun isWinner(): Boolean =
-            grid.any { row -> row.allMarked() } || grid.transpose(-1).any { col -> col.allMarked() }
+            val marked = this.copy(grid = grid.map { row -> row.map { cell -> if (cell == num) null else cell } })
+            return marked.copy(won = if (marked.won == null && (marked.hasFullRow() || marked.hasFullCol())) Instant.now() else marked.won)
+        }
 
-        private fun List<Int?>.allMarked() = this.filterNotNull().isEmpty()
+        fun isWinner(): Boolean = this.won != null
 
         companion object {
             fun load(input: List<String>) = Board(input.map { it.trim().split(" +".toRegex()).map(String::toInt) })
@@ -19,15 +24,19 @@ object Puzzle04 {
     }
 
     data class Game(val boards: List<Board>) {
-        val hasWinner: Boolean get() = boards.any(Board::isWinner)
-        val winnerBoard: Board? get() = boards.find(Board::isWinner)
+        val hasAllWinners: Boolean get() = boards.all(Board::isWinner)
+        val hasOneWinner: Boolean get() = boards.any(Board::isWinner)
+        val looserBoard: Board? get() = boards.filterNot { it.won == null }.maxByOrNull { it.won!! }
+        val winnerBoard: Board? get() = boards.filterNot { it.won == null }.minByOrNull { it.won!! }
 
         fun mark(num: Int) = this.copy(boards = boards.map { it.mark(num) })
 
         companion object {
-            fun load(input: List<String>): Game {
+            fun load(input: List<String>): Pair<List<Int>, Game> {
+                val numbers = input.take(1).flatMap { it.split(",").map(String::toInt) }
+                var rest = input.drop(1)
+
                 var boards = emptyList<Board>()
-                var rest = input
 
                 do {
                     rest = rest.drop(1)
@@ -35,19 +44,17 @@ object Puzzle04 {
                     rest = rest.drop(5)
                 } while (rest.isNotEmpty())
 
-                return Game(boards)
+                return numbers to Game(boards)
             }
         }
     }
 
-    fun playGame(input: List<String>): Int {
-        val numbers = input.take(1).flatMap { it.split(",").map(String::toInt) }
-        val startGame = Game.load(input.drop(1))
+    fun playGameToWin(input: List<String>): Int {
+        val (numbers, startGame) = Game.load(input)
         var lastNumber: Int? = null
 
         val stopGame = numbers.fold(startGame) { acc, num ->
-            if (acc.hasWinner)
-                acc
+            if (acc.hasOneWinner) acc
             else {
                 lastNumber = num
                 acc.mark(num)
@@ -55,5 +62,20 @@ object Puzzle04 {
         }
 
         return (stopGame.winnerBoard?.allUnmarked?.sum() ?: 1) * (lastNumber ?: 1)
+    }
+
+    fun playGameToLoose(input: List<String>): Int {
+        val (numbers, startGame) = Game.load(input)
+        var lastNumber: Int? = null
+
+        val stopGame = numbers.fold(startGame) { acc, num ->
+            if (acc.hasAllWinners) acc
+            else {
+                lastNumber = num
+                acc.mark(num)
+            }
+        }
+
+        return (stopGame.looserBoard?.allUnmarked?.sum() ?: 1) * (lastNumber ?: 1)
     }
 }

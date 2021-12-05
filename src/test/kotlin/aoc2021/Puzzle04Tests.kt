@@ -1,7 +1,8 @@
 package aoc2021
 
 import TestHelpers.readLinesFromResource
-import aoc2021.Puzzle04.playGame
+import aoc2021.Puzzle04.playGameToLoose
+import aoc2021.Puzzle04.playGameToWin
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -30,12 +31,22 @@ internal class Puzzle04Tests {
     private val answerBingo = readLinesFromResource("2021/puzzle04.txt")
 
     @Test
-    fun `bingo example`() {
-        assertEquals(4512, playGame(exampleBingo))
+    fun `win bingo example`() {
+        assertEquals(4512, playGameToWin(exampleBingo))
     }
 
     @Test
-    fun `bingo answer`() {
-        assertEquals(44088, playGame(answerBingo))
+    fun `win bingo answer`() {
+        assertEquals(44088, playGameToWin(answerBingo))
+    }
+
+    @Test
+    fun `loose bingo example`() {
+        assertEquals(1924, playGameToLoose(exampleBingo))
+    }
+
+    @Test
+    fun `loose bingo answer`() {
+        assertEquals(23670, playGameToLoose(answerBingo))
     }
 }
