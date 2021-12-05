@@ -16,10 +16,10 @@ internal class Puzzle02Tests {
     @Test
     fun `move submarine example`() {
         val result = moveSubmarine(Position.start, exampleCommands)
-        assertEquals(150, result.horizontal * result.depth)
+        assertEquals(15 * 10, result.horizontal * result.depth)
 
         val result2 = moveSubmarine2(Position.start, exampleCommands)
-        assertEquals(150, result2.horizontal * result2.depth)
+        assertEquals(15 * 10, result2.horizontal * result2.depth)
     }
 
     @Test
@@ -52,7 +52,7 @@ internal class Puzzle02Tests {
         fun `move example`() {
             val result = moveSubmarineByAim(Position.start, exampleCommands)
 
-            assertEquals(900, result.horizontal * result.depth)
+            assertEquals(15 * 60, result.horizontal * result.depth)
         }
 
         @Test

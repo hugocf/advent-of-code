@@ -32,7 +32,7 @@ internal class Puzzle04Tests {
 
     @Test
     fun `win bingo example`() {
-        assertEquals(4512, playGameToWin(exampleBingo))
+        assertEquals(188 * 24, playGameToWin(exampleBingo))
     }
 
     @Test
@@ -42,7 +42,7 @@ internal class Puzzle04Tests {
 
     @Test
     fun `loose bingo example`() {
-        assertEquals(1924, playGameToLoose(exampleBingo))
+        assertEquals(148 * 13, playGameToLoose(exampleBingo))
     }
 
     @Test

@@ -26,7 +26,7 @@ internal class Puzzle03Tests {
         @Test
         fun `calculate example`() {
             val result = calculatePowerConsumption(exampleReport)
-            assertEquals(198, result.gammaRate * result.epsionRate)
+            assertEquals(22 * 9, result.gammaRate * result.epsionRate)
         }
 
         @Test
@@ -53,7 +53,7 @@ internal class Puzzle03Tests {
         @Test
         fun `calculate life support example`() {
             val result = calculateLifeSupport(exampleReport)
-            assertEquals(230, result.oxygenGeneratorRating * result.co2ScrubberRating)
+            assertEquals(23 * 10, result.oxygenGeneratorRating * result.co2ScrubberRating)
         }
 
         @Test
