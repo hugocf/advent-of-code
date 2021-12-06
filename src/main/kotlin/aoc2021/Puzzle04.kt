@@ -10,16 +10,17 @@ object Puzzle04 {
         fun mark(num: Int): Board {
             fun List<Int?>.allAreMarked() = this.filterNotNull().isEmpty()
             fun Board.hasFullRow() = this.grid.any { row -> row.allAreMarked() }
-            fun Board.hasFullCol() = this.grid.transpose(-1).any { col -> col.allAreMarked() }
+            fun Board.hasFullCol() = this.grid.transpose(0).any { col -> col.allAreMarked() }
 
             val marked = this.copy(grid = grid.map { row -> row.map { cell -> if (cell == num) null else cell } })
-            return marked.copy(won = if (marked.won == null && (marked.hasFullRow() || marked.hasFullCol())) Instant.now() else marked.won)
+            val hasJustWon = !marked.isWinner() && (marked.hasFullRow() || marked.hasFullCol())
+            return marked.copy(won = if (hasJustWon) Instant.now() else marked.won)
         }
 
         fun isWinner(): Boolean = this.won != null
 
         companion object {
-            fun load(input: List<String>) = Board(input.map { it.trim().split(" +".toRegex()).map(String::toInt) })
+            fun load(input: List<String>): Board = input.map { it.trim().split(" +".toRegex()).map(String::toInt) }.let(::Board)
         }
     }
 
@@ -34,16 +35,7 @@ object Puzzle04 {
         companion object {
             fun load(input: List<String>): Pair<List<Int>, Game> {
                 val numbers = input.take(1).flatMap { it.split(",").map(String::toInt) }
-                var rest = input.drop(1)
-
-                var boards = emptyList<Board>()
-
-                do {
-                    rest = rest.drop(1)
-                    boards = boards + Board.load(rest.take(5))
-                    rest = rest.drop(5)
-                } while (rest.isNotEmpty())
-
+                val boards = input.drop(1).filter(String::isNotEmpty).chunked(5, Board::load)
                 return numbers to Game(boards)
             }
         }
@@ -57,16 +49,9 @@ object Puzzle04 {
 
     private fun playGame(input: List<String>, shouldStop: (Game) -> Boolean, resultBoard: (Game) -> Board?): Int {
         val (numbers, startGame) = Game.load(input)
-        var lastNumber: Int? = null
-
-        val stoppedGame = numbers.fold(startGame) { acc, num ->
-            if (shouldStop(acc)) acc
-            else {
-                lastNumber = num
-                acc.mark(num)
-            }
+        val stoppedGame = numbers.fold(0 to startGame) { acc, num ->
+            if (shouldStop(acc.second)) acc else num to acc.second.mark(num)
         }
-
-        return (resultBoard(stoppedGame)?.allUnmarked?.sum() ?: 1) * (lastNumber ?: 1)
+        return (resultBoard(stoppedGame.second)?.allUnmarked?.sum() ?: 1) * stoppedGame.first
     }
 }
