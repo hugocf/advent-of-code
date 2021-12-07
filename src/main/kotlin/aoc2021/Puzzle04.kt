@@ -4,6 +4,23 @@ import aoc2021.Matrix.transpose
 import java.time.Instant
 
 object Puzzle04 {
+    data class Game(val boards: List<Board>) {
+        val hasAllWinners: Boolean get() = boards.all(Board::isWinner)
+        val hasOneWinner: Boolean get() = boards.any(Board::isWinner)
+        val looserBoard: Board? get() = boards.filterNot { it.won == null }.maxByOrNull { it.won!! }
+        val winnerBoard: Board? get() = boards.filterNot { it.won == null }.minByOrNull { it.won!! }
+
+        fun mark(num: Int) = this.copy(boards = boards.map { it.mark(num) })
+
+        companion object {
+            fun load(input: List<String>): Pair<List<Int>, Game> {
+                val numbers = input.take(1).flatMap { it.split(",").map(String::toInt) }
+                val boards = input.drop(1).filter(String::isNotEmpty).chunked(5, Board::load)
+                return numbers to Game(boards)
+            }
+        }
+    }
+
     data class Board(val grid: List<List<Int?>>, val won: Instant? = null) {
         val allUnmarked: List<Int> get() = grid.flatMap { row -> row.filterNotNull() }
 
@@ -21,23 +38,6 @@ object Puzzle04 {
 
         companion object {
             fun load(input: List<String>): Board = input.map { it.trim().split(" +".toRegex()).map(String::toInt) }.let(::Board)
-        }
-    }
-
-    data class Game(val boards: List<Board>) {
-        val hasAllWinners: Boolean get() = boards.all(Board::isWinner)
-        val hasOneWinner: Boolean get() = boards.any(Board::isWinner)
-        val looserBoard: Board? get() = boards.filterNot { it.won == null }.maxByOrNull { it.won!! }
-        val winnerBoard: Board? get() = boards.filterNot { it.won == null }.minByOrNull { it.won!! }
-
-        fun mark(num: Int) = this.copy(boards = boards.map { it.mark(num) })
-
-        companion object {
-            fun load(input: List<String>): Pair<List<Int>, Game> {
-                val numbers = input.take(1).flatMap { it.split(",").map(String::toInt) }
-                val boards = input.drop(1).filter(String::isNotEmpty).chunked(5, Board::load)
-                return numbers to Game(boards)
-            }
         }
     }
 
