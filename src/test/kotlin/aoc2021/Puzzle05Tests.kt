@@ -1,7 +1,8 @@
 package aoc2021
 
 import TestHelpers.readLinesFromResource
-import aoc2021.Puzzle05.countOverlappingPoints
+import aoc2021.Puzzle05.overlappingAllLines
+import aoc2021.Puzzle05.overlappingPerpendicularLines
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -21,12 +22,22 @@ internal class Puzzle05Tests {
     private val answerLines = readLinesFromResource("2021/puzzle05.txt")
 
     @Test
-    fun `lines example`() {
-        assertEquals(5, countOverlappingPoints(exampleLines))
+    fun `only straight lines example`() {
+        assertEquals(5, overlappingPerpendicularLines(exampleLines))
     }
 
     @Test
-    fun `lines answer`() {
-        assertEquals(6005, countOverlappingPoints(answerLines))
+    fun `only straight lines answer`() {
+        assertEquals(6005, overlappingPerpendicularLines(answerLines))
+    }
+
+    @Test
+    fun `with diagonal lines example`() {
+        assertEquals(12, overlappingAllLines(exampleLines))
+    }
+
+    @Test
+    fun `with diagonal lines answer`() {
+        assertEquals(23864, overlappingAllLines(answerLines))
     }
 }
