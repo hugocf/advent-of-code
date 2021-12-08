@@ -1,6 +1,11 @@
 package aoc2021
 
-import kotlin.math.abs
+import aoc2021.Puzzle05.Helpers.drawLine
+import aoc2021.Puzzle05.Helpers.isStraightLine
+import aoc2021.Puzzle05.Helpers.loadLine
+import kotlin.math.absoluteValue
+import kotlin.math.max
+import kotlin.math.sign
 
 typealias Line = List<Coordinate>
 typealias Coordinate = Pair<Int, Int>
@@ -9,10 +14,10 @@ object Puzzle05 {
     data class Segment(val from: Coordinate, val to: Coordinate)
 
     fun overlappingPerpendicularLines(input: List<String>): Int =
-        input.map(Helpers::loadLine).map(Helpers::drawSimpleLine).flatten().groupBy { it }.count { it.value.size > 1 }
+        input.map(::loadLine).filter(::isStraightLine).map(::drawLine).flatten().groupBy { it }.count { it.value.size > 1 }
 
     fun overlappingAllLines(input: List<String>): Int =
-        input.map(Helpers::loadLine).map(Helpers::drawAnyLine).flatten().groupBy { it }.count { it.value.size > 1 }
+        input.map(::loadLine).map(::drawLine).flatten().groupBy { it }.count { it.value.size > 1 }
 
     private object Helpers {
         fun loadLine(input: String): Segment =
@@ -21,26 +26,17 @@ object Puzzle05 {
         private fun loadCoordinate(input: String): Coordinate =
             input.split(",").map(String::toInt).let { point -> point.first() to point.last() }
 
-        fun drawSimpleLine(s: Segment): Line = drawHorizontalLine(s) + drawVerticalLine(s)
+        fun isStraightLine(s: Segment): Boolean = s.from.first == s.to.first || s.from.second == s.to.second
 
-        fun drawAnyLine(s: Segment): Line = drawHorizontalLine(s) + drawVerticalLine(s) + drawDiagonalLine(s)
+        fun drawLine(s: Segment): Line {
+            val horizontalPoints = s.to.first - s.from.first
+            val verticalPoints = s.to.second - s.from.second
+            val totalPoints = max(horizontalPoints.absoluteValue, verticalPoints.absoluteValue) + 1
 
-        private fun drawHorizontalLine(s: Segment): Line =
-            if (s.from.first == s.to.first) range(s.from.second, s.to.second).map { s.from.first to it }
-            else emptyList()
+            val xs = generateSequence(s.from.first) { it + horizontalPoints.sign }.take(totalPoints).toList()
+            val ys = generateSequence(s.from.second) { it + verticalPoints.sign }.take(totalPoints).toList()
 
-        private fun drawVerticalLine(s: Segment): Line =
-            if (s.from.second == s.to.second) range(s.from.first, s.to.first).map { it to s.from.second }
-            else emptyList()
-
-        private fun drawDiagonalLine(s: Segment): Line {
-            val hdist = abs(s.from.first - s.to.first)
-            val vdist = abs(s.from.second - s.to.second)
-            val xs = range(s.from.first, s.to.first)
-            val ys = range(s.from.second, s.to.second)
-            return if (hdist > 0 && vdist > 0 && hdist == vdist) xs.zip(ys) else emptyList()
+            return xs zip ys
         }
-
-        private fun range(a: Int, b: Int) = if (a < b) a..b else a downTo b
     }
 }
