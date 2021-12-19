@@ -2,6 +2,7 @@ package aoc2021
 
 import TestHelpers.readLinesFromResource
 import aoc2021.Puzzle08.countEasyDigits
+import aoc2021.Puzzle08.sumAllDigits
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -21,12 +22,22 @@ internal class Puzzle08Tests {
     private val answerSegments = readLinesFromResource("2021/puzzle08.txt")
 
     @Test
-    fun `easy digits example`() {
+    fun `count easy digits example`() {
         assertEquals(26, countEasyDigits(exampleSegments))
     }
 
     @Test
-    fun `easy digits answer`() {
+    fun `count easy digits answer`() {
         assertEquals(412, countEasyDigits(answerSegments))
+    }
+
+    @Test
+    fun `sum all digits example`() {
+        assertEquals(61229, sumAllDigits(exampleSegments))
+    }
+
+    @Test
+    fun `sum all digits answer`() {
+        assertEquals(978171, sumAllDigits(answerSegments))
     }
 }
