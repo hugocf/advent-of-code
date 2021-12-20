@@ -1,6 +1,5 @@
 package aoc2021
 
-import aoc2021.Matrix.transpose
 import java.time.Instant
 
 object Puzzle04 {
@@ -21,7 +20,7 @@ object Puzzle04 {
         }
     }
 
-    data class Board(val grid: List<List<Int?>>, val won: Instant? = null) {
+    data class Board(val grid: Matrix<Int?>, val won: Instant? = null) {
         val allUnmarked: List<Int> get() = grid.flatMap { row -> row.filterNotNull() }
 
         fun mark(num: Int): Board {

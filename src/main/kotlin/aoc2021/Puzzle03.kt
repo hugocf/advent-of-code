@@ -1,7 +1,5 @@
 package aoc2021
 
-import aoc2021.Matrix.transpose
-
 object Puzzle03 {
     data class PowerConsumption(val gammaRate: Int, val epsionRate: Int)
 

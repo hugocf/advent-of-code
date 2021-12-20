@@ -1,6 +1,5 @@
 package aoc2021
 
-import aoc2021.Matrix.transpose
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
