@@ -12,10 +12,10 @@ object Puzzle09 {
 
         return matrix
             .findLowPoints()
-            .map { matrix.findBasin(it) }
-            .sortedBy { it.size }
+            .map { matrix.findBasin(it).size }
+            .sorted()
             .takeLast(3)
-            .fold(1) { acc, el -> acc * el.size }
+            .reduce(Int::times)
     }
 
     private fun parseHeatmap(input: List<String>): Matrix<Int> =
@@ -35,7 +35,7 @@ object Puzzle09 {
         val basinPoints = mutableSetOf(start)
         val pointsToProcess = mutableSetOf(start)
         do {
-            pointsToProcess += pointsToProcess.flatMap { this.pointsAdjacentTo(it) }
+            pointsToProcess += pointsToProcess.flatMap(::pointsAdjacentTo)
             pointsToProcess -= basinPoints
             pointsToProcess.removeAll(isOutsideBasin)
             basinPoints += pointsToProcess
