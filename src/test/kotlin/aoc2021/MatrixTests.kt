@@ -30,15 +30,15 @@ internal class MatrixTests {
 
         // @formatter:off
         assertAll(
-            { assertEquals(setOf(2, 4),         matrix.adjacent(0, 0)) },
-            { assertEquals(setOf(1, 3, 5),      matrix.adjacent(0, 1)) },
-            { assertEquals(setOf(2, 6),         matrix.adjacent(0, 2)) },
-            { assertEquals(setOf(1, 5, 7),      matrix.adjacent(1, 0)) },
-            { assertEquals(setOf(2, 4, 6, 8),   matrix.adjacent(1, 1)) },
-            { assertEquals(setOf(3, 5, 9),      matrix.adjacent(1, 2)) },
-            { assertEquals(setOf(4, 8),         matrix.adjacent(2, 0)) },
-            { assertEquals(setOf(7, 5, 9),      matrix.adjacent(2, 1)) },
-            { assertEquals(setOf(8, 6),         matrix.adjacent(2, 2)) },
+            { assertEquals(setOf(2, 4),         matrix.valuesAdjacentTo(0, 0)) },
+            { assertEquals(setOf(1, 3, 5),      matrix.valuesAdjacentTo(0, 1)) },
+            { assertEquals(setOf(2, 6),         matrix.valuesAdjacentTo(0, 2)) },
+            { assertEquals(setOf(1, 5, 7),      matrix.valuesAdjacentTo(1, 0)) },
+            { assertEquals(setOf(2, 4, 6, 8),   matrix.valuesAdjacentTo(1, 1)) },
+            { assertEquals(setOf(3, 5, 9),      matrix.valuesAdjacentTo(1, 2)) },
+            { assertEquals(setOf(4, 8),         matrix.valuesAdjacentTo(2, 0)) },
+            { assertEquals(setOf(7, 5, 9),      matrix.valuesAdjacentTo(2, 1)) },
+            { assertEquals(setOf(8, 6),         matrix.valuesAdjacentTo(2, 2)) },
         )
         // @formatter:on
     }
