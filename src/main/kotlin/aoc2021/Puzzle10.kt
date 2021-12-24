@@ -1,30 +1,36 @@
 package aoc2021
 
-import aoc2021.Puzzle10.Helpers.calculatePoints
-import aoc2021.Puzzle10.Helpers.checkSyntaxError
+import aoc2021.Puzzle10.Helpers.ValidationResult
+import aoc2021.Puzzle10.Helpers.ValidationResult.SyntaxError
+import aoc2021.Puzzle10.Helpers.validateChunks
 
 object Puzzle10 {
     fun totalSyntaxErrorScore(input: List<String>): Int =
-        input.mapNotNull(::checkSyntaxError).map(::calculatePoints).sum()
+        input.mapNotNull(::validateChunks).map(ValidationResult::score).sum()
 
     private object Helpers {
-        fun checkSyntaxError(line: String): SyntaxError? {
+        fun validateChunks(line: String): ValidationResult? {
             val opening = Stack<Char>()
 
             line.forEach { char ->
                 if (char.isOpening()) opening.push(char)
                 else {
                     val latest = opening.pop() ?: ' '
-                    if (char doesNotClose latest) return SyntaxError(delimiters[latest]?.close ?: ' ', char)
+                    if (char doesNotClose latest) return SyntaxError(delimiters[latest] ?: ' ', char)
                 }
             }
 
             return null
         }
 
-        fun calculatePoints(error: SyntaxError): Int = delimiters[error.found]?.errorPoints ?: 0
+        sealed interface ValidationResult {
+            fun score() = 0
 
-        data class SyntaxError(val expected: Char, val found: Char)
+            data class SyntaxError(val expected: Char, val found: Char): ValidationResult {
+                private val points = mapOf(')' to 3, ']' to 57, '}' to 1197, '>' to 25137)
+                override fun score() = points[found] ?: 0
+            }
+        }
 
         data class Stack<T>(private val data: ArrayDeque<T> = ArrayDeque()) {
             fun push(element: T) = data.addFirst(element)
@@ -32,19 +38,10 @@ object Puzzle10 {
             fun pop() = data.removeFirstOrNull()
         }
 
-        data class Chunk(val open: Char, val close: Char, val errorPoints: Int)
+        val delimiters = mapOf('(' to ')', '[' to ']', '{' to '}', '<' to '>')
 
-        val delimiters = setOf(
-            Chunk('(', ')', 3),
-            Chunk('[', ']', 57),
-            Chunk('{', '}', 1197),
-            Chunk('<', '>', 25137),
-        )
+        fun Char.isOpening() = delimiters.keys.contains(this)
 
-        fun Char.isOpening() = delimiters.any { it.open == this }
-
-        infix fun Char.doesNotClose(open: Char) = !delimiters.any { it.open == open && it.close == this }
-
-        operator fun Set<Chunk>.get(search: Char) = delimiters.find { it.open == search || it.close == search }
+        infix fun Char.doesNotClose(open: Char) = this != delimiters[open]
     }
 }
