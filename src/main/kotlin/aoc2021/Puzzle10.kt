@@ -2,18 +2,13 @@ package aoc2021
 
 import aoc2021.Puzzle10.Helpers.calculatePoints
 import aoc2021.Puzzle10.Helpers.checkSyntaxError
-import aoc2021.Puzzle10.Helpers.parseChunks
-
-typealias ChunksLine = List<Char>
 
 object Puzzle10 {
     fun totalSyntaxErrorScore(input: List<String>): Int =
-        parseChunks(input).mapNotNull(::checkSyntaxError).map(::calculatePoints).sum()
+        input.mapNotNull(::checkSyntaxError).map(::calculatePoints).sum()
 
     private object Helpers {
-        fun parseChunks(input: List<String>): List<ChunksLine> = input.map { it.toCharArray().toList() }
-
-        fun checkSyntaxError(line: ChunksLine): SyntaxError? {
+        fun checkSyntaxError(line: String): SyntaxError? {
             val opening = Stack<Char>()
 
             line.forEach { char ->
