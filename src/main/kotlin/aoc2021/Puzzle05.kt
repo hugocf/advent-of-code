@@ -7,7 +7,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.sign
 
-typealias Line = List<Coordinate>
+typealias GraphicLine = List<Coordinate>
 typealias Coordinate = Pair<Int, Int>
 
 object Puzzle05 {
@@ -28,7 +28,7 @@ object Puzzle05 {
 
         fun isStraightLine(s: Segment): Boolean = s.from.first == s.to.first || s.from.second == s.to.second
 
-        fun drawLine(s: Segment): Line {
+        fun drawLine(s: Segment): GraphicLine {
             val horizontalPoints = s.to.first - s.from.first
             val verticalPoints = s.to.second - s.from.second
             val totalPoints = max(horizontalPoints.absoluteValue, verticalPoints.absoluteValue) + 1
